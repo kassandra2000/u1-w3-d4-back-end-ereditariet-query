@@ -132,6 +132,8 @@ public class Application {
         System.out.println(ev.getPartiteVinteInCasa());
         System.out.println("------------ottenere partite vinte in trasferta--------------------");
         System.out.println(ev.getPartiteVinteInTrasferta());
+        //-----------------------------------------esercizio 3-------------------------------------------------
+
 
         em.close();
         emf.close();

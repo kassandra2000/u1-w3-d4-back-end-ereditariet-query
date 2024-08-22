@@ -14,6 +14,9 @@ import java.util.*;
 @Table(name = "events")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_evento")
+
+@NamedQuery(name = "findPartiteVinteInCasa", query = "SELECT f FROM FootballMatch f WHERE f.homeTeam=f.winningTeam")
+@NamedQuery(name = "findPartiteVinteInTrasferta", query = "SELECT f FROM FootballMatch f WHERE f.guestTeam=f.winningTeam")
 public abstract class Event {
     static Faker fk = new Faker();
 

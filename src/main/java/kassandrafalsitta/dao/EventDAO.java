@@ -5,6 +5,7 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import kassandrafalsitta.entities.Concert;
 import kassandrafalsitta.entities.Event;
+import kassandrafalsitta.entities.FootballMatch;
 import kassandrafalsitta.enums.Genre;
 
 import java.util.List;
@@ -75,13 +76,13 @@ public class EventDAO {
         return query.getResultList();
     }
 
-    public List<Concert> getPartiteVinteInCasa() {
-        TypedQuery<Concert> query = em.createQuery("SELECT f FROM Concert f WHERE f.homeTeam=f.winningTeam", Concert.class);
+    public List<FootballMatch> getPartiteVinteInCasa() {
+        TypedQuery<FootballMatch> query = em.createNamedQuery("findPartiteVinteInCasa", FootballMatch.class);
         return query.getResultList();
     }
 
-    public List<Concert> getPartiteVinteInTrasferta() {
-        TypedQuery<Concert> query = em.createQuery("SELECT f FROM Concert f WHERE f.guestTeam=f.winningTeam", Concert.class);
+    public List<FootballMatch> getPartiteVinteInTrasferta() {
+        TypedQuery<FootballMatch> query = em.createNamedQuery("findPartiteVinteInTrasferta", FootballMatch.class);
         return query.getResultList();
     }
 }
