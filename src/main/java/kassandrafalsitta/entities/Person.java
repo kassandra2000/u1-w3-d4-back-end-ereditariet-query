@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @Entity
-@Table(name = "person")
+@Table(name = "Person")
 public class Person {
     public static Supplier<Person> createPersonWithScanner = () -> {
         Scanner sc = new Scanner(System.in);
@@ -59,6 +59,9 @@ public class Person {
     private LocalDate dateOfBirt;
     @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @ManyToMany(mappedBy = "athletesSet")
+    private List<AthleticsCompetition> AthleticsCompetitioList;
 
     @OneToMany(mappedBy = "personId")
     private List<Participation> partecipationList;

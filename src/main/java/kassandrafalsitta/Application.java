@@ -11,16 +11,11 @@ import kassandrafalsitta.entities.Event;
 import kassandrafalsitta.entities.Location;
 import kassandrafalsitta.entities.Participation;
 import kassandrafalsitta.entities.Person;
+import kassandrafalsitta.enums.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.UUID;
-
-import static kassandrafalsitta.entities.Event.createEvent;
-import static kassandrafalsitta.entities.Location.createLocation;
-import static kassandrafalsitta.entities.Participation.createParticipation;
-import static kassandrafalsitta.entities.Person.createPerson;
 
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("u1w3d4");
@@ -43,85 +38,101 @@ public class Application {
 //        persons.add(person);
 //        prsd.save(persons);
 
-        while (true) {
-            try {
-                System.out.println("vuoi creare un evento?");
-                System.out.println("1. Crea evento \n2. Salva evento \n3. Cerca evento \n4. Elimina evento\n5. Crea persona\n6. Salva persona\n7. Crea location\n8. Salva location\n9. Crea partecipazione\n10. Salva partecipazione\n11. Esci");
-                String choice = sc.nextLine();
-                switch (choice) {
-                    case "1":
-                        locations = em.createQuery("SELECT e FROM Location e", Location.class).getResultList();
-                        events = createEvent(ld, locations);
-                        System.out.println(events);
-                        break;
-                    case "2":
-                        ev.save(events);
-                        break;
-                    case "3":
-                        try {
-                            System.out.println("Quale evento vuoi cercare tramite id?");
-                            UUID findId = UUID.fromString(sc.nextLine());
-                            ev.findById(findId);
+//        while (true) {
+//            try {
+//                System.out.println("vuoi creare un evento?");
+////               "1. Crea evento \n2. Salva evento \n
+//
+//                System.out.println("1. Crea evento \n2. Salva evento  \n3. Cerca evento \n4. Elimina evento\n5. Crea persona\n6. Salva persona\n7. Crea location\n8. Salva location\n9. Crea partecipazione\n10. Salva partecipazione\n11. Esci");
+//                String choice = sc.nextLine();
+//                switch (choice) {
+////
+//                    case "1":
+//                        locations = em.createQuery("SELECT e FROM Location e", Location.class).getResultList();
+//                        persons = em.createQuery("SELECT e FROM Person e", Person.class).getResultList();
+//                        events = createEvent(ld, locations, persons);
+//                        System.out.println(events);
+//                        break;
+//                    case "2":
+//                        ev.save(events);
+//                        break;
+//                    case "3":
+//                        try {
+//                            System.out.println("Quale evento vuoi cercare tramite id?");
+//                            UUID findId = UUID.fromString(sc.nextLine());
+//                            ev.findById(findId);
+//
+//                        } catch (NumberFormatException e) {
+//                            System.out.println("Inserisci il formato corretto\n");
+//
+//                        } catch (Exception e) {
+//                            System.out.println(e.getMessage());
+//
+//                        }
+//                        break;
+//                    case "4":
+//                        try {
+//                            System.out.println("Quale evento vuoi eliminare tramite id?");
+//                            UUID findByIdAndDelete = UUID.fromString(sc.nextLine());
+//                            ev.findByIdAndDelete(findByIdAndDelete);
+//
+//                        } catch (NumberFormatException e) {
+//                            System.out.println("Inserisci il formato corretto");
+//
+//                        } catch (Exception e) {
+//                            System.out.println(e.getMessage());
+//
+//                        }
+//                        break;
+//                    case "5":
+//                        persons = createPerson();
+//                        System.out.println(persons);
+//                        break;
+//                    case "6":
+//                        prsd.save(persons);
+//                        break;
+//                    case "7":
+//                        locations = createLocation();
+//                        System.out.println(locations);
+//                        break;
+//                    case "8":
+//                        ld.save(locations);
+//                        break;
+//                    case "9":
+//                        events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+//                        persons = em.createQuery("SELECT e FROM Person e", Person.class).getResultList();
+//                        partecipations = createParticipation(ev, prsd, events, persons);
+//                        System.out.println(partecipations);
+//                        break;
+//                    case "10":
+//                        pd.save(partecipations);
+//                        break;
+//                    case "11":
+//                        break;
+//                    default:
+//                        System.out.println("il valore non è valido");
+//                        break;
+//                }
+//                if (choice.equals("11")) {
+//                    System.out.println("Uscita dal programma...");
+//                    break;
+//                }
+//            } catch (Exception e) {
+//                System.out.println(e.getMessage());
+//            }
+//        }
 
-                        } catch (NumberFormatException e) {
-                            System.out.println("Inserisci il formato corretto\n");
+        //-----------------------------------------esercizio 1-------------------------------------------------
+        System.out.println("------------cerco per genere--------------------");
+        System.out.println(ev.getConcertByGenre(Genre.POP));
+        System.out.println("------------cerco in base allo streaming true/false--------------------");
+        System.out.println(ev.getConcertInStreaming(true));
+        //-----------------------------------------esercizio 2-------------------------------------------------
+        System.out.println("------------ottenere partite vinte in casa--------------------");
+        System.out.println(ev.getPartiteVinteInCasa());
+        System.out.println("------------ottenere partite vinte in trasferta--------------------");
+        System.out.println(ev.getPartiteVinteInTrasferta());
 
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-
-                        }
-                        break;
-                    case "4":
-                        try {
-                            System.out.println("Quale evento vuoi eliminare tramite id?");
-                            UUID findByIdAndDelete = UUID.fromString(sc.nextLine());
-                            ev.findByIdAndDelete(findByIdAndDelete);
-
-                        } catch (NumberFormatException e) {
-                            System.out.println("Inserisci il formato corretto");
-
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-
-                        }
-                        break;
-                    case "5":
-                        persons = createPerson();
-                        System.out.println(persons);
-                        break;
-                    case "6":
-                        prsd.save(persons);
-                        break;
-                    case "7":
-                        locations = createLocation();
-                        System.out.println(locations);
-                        break;
-                    case "8":
-                        ld.save(locations);
-                        break;
-                    case "9":
-                        events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
-                        persons = em.createQuery("SELECT e FROM Person e", Person.class).getResultList();
-                        partecipations = createParticipation(ev, prsd, events, persons);
-                        System.out.println(partecipations);
-                        break;
-                    case "10":
-                        pd.save(partecipations);
-                        break;
-                    case "11":
-                        break;
-                    default:
-                        System.out.println("il valore non è valido");
-                        break;
-                }
-                if (choice.equals("11")) {
-                    System.out.println("Uscita dal programma...");
-                    break;
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
         em.close();
         emf.close();
     }

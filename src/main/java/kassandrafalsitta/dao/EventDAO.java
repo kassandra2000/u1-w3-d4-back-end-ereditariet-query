@@ -2,7 +2,10 @@ package kassandrafalsitta.dao;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.TypedQuery;
+import kassandrafalsitta.entities.Concert;
 import kassandrafalsitta.entities.Event;
+import kassandrafalsitta.enums.Genre;
 
 import java.util.List;
 import java.util.UUID;
@@ -58,5 +61,27 @@ public class EventDAO {
         } catch (Exception e) {
             System.out.println("Errore: " + e.getMessage());
         }
+    }
+
+    public List<Concert> getConcertInStreaming(Boolean bool) {
+        TypedQuery<Concert> query = em.createQuery("SELECT c FROM Concert c WHERE c.inStreaming=:bool", Concert.class);
+        query.setParameter("bool", bool);
+        return query.getResultList();
+    }
+
+    public List<Concert> getConcertByGenre(Genre genre) {
+        TypedQuery<Concert> query = em.createQuery("SELECT c FROM Concert c WHERE c.genre=:genre", Concert.class);
+        query.setParameter("genre", genre);
+        return query.getResultList();
+    }
+
+    public List<Concert> getPartiteVinteInCasa() {
+        TypedQuery<Concert> query = em.createQuery("SELECT f FROM Concert f WHERE f.homeTeam=f.winningTeam", Concert.class);
+        return query.getResultList();
+    }
+
+    public List<Concert> getPartiteVinteInTrasferta() {
+        TypedQuery<Concert> query = em.createQuery("SELECT f FROM Concert f WHERE f.guestTeam=f.winningTeam", Concert.class);
+        return query.getResultList();
     }
 }

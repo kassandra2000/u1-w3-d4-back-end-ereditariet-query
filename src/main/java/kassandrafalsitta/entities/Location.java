@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 @Entity
-@Table(name = "locations")
+@Table(name = "Locations")
 public class Location {
     //supplier
     public static Supplier<Location> locationSupplierWithScanner = () -> {

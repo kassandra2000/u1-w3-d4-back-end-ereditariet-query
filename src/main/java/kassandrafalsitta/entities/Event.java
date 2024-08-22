@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import jakarta.persistence.*;
 import kassandrafalsitta.dao.LocationDAO;
 import kassandrafalsitta.enums.EventType;
+import kassandrafalsitta.enums.Genre;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -11,10 +12,11 @@ import java.util.*;
 
 @Entity
 @Table(name = "events")
-public class Event {
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "tipo_evento")
+public abstract class Event {
     static Faker fk = new Faker();
 
-    ;
     static Random r = new Random();
     //attributi
     @Id
@@ -37,9 +39,11 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "location_id")
     private Location locationId;
+
     //costruttore
     public Event() {
     }
+
     public Event(String title, LocalDate eventDate, String description, EventType eventType, int maximumNumberOfParticipants, Location locationId) {
         this.title = title;
         this.eventDate = eventDate;
@@ -50,44 +54,9 @@ public class Event {
     }
 
     //supplier
-    public static Event eventSupplierWithScanner(LocationDAO ld) {
-        Scanner sc = new Scanner(System.in);
-        while (true) {
-            try {
-                System.out.println("inserisci titolo");
-                String title = sc.nextLine();
-                System.out.println("inserisci data");
-                LocalDate date = LocalDate.parse(sc.nextLine());
-                System.out.println("inserisci descrizione");
-                String description = sc.nextLine();
-                System.out.println("inserisci tipo: PUBBLICO o PRIVATO");
-                EventType type = EventType.valueOf(sc.nextLine());
-                System.out.println("inserisci numero massimo di partecipanti");
-                int nMaxPartecipants = Integer.parseInt(sc.nextLine());
-                System.out.println("inserisci l'id della location");
-                UUID locationId = UUID.fromString(sc.nextLine());
-
-                return new Event(title, date, description, type, nMaxPartecipants, ld.findById(locationId));
-
-            } catch (InputMismatchException e) {
-                System.out.println("inserisci i valori correttamente");
-
-            } catch (Exception e) {
-                System.out.println("Errore: " + e.getMessage());
-            }
-        }
-    }
-
-    public static Event eventSupplier(List<Location> locationList) {
-        EventType[] eventTypeList = EventType.values();
-        LocalDate date = fk.date().birthday().toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        return new Event(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())));
-    }
 
     //metodi
-    public static List<Event> createEvent(LocationDAO ld, List<Location> locationList) {
+    public static List<Event> createEvent(LocationDAO ld, List<Location> locationList, List<Person> personList) {
         List<Event> eventList = new ArrayList<>();
         Scanner sc = new Scanner(System.in);
         int numOfEvents;
@@ -105,21 +74,28 @@ public class Event {
 
         }
 
-        System.out.println("1. creali tu \n 2. creali random");
+        System.out.println("1. Crea partita di calcio \n 2. Crea concerto\n 3. Crea competizione di atletica");
         int choice;
         try {
             choice = Integer.parseInt(sc.nextLine());
             switch (choice) {
                 case 1:
                     for (int i = 0; i < numOfEvents; i++) {
-                        eventList.add(eventSupplierWithScanner(ld));
+                        eventList.add(footballMatchCreateOne(locationList));
                     }
+                    System.out.println("Partita di calcio creato con successo");
                     break;
                 case 2:
                     for (int i = 0; i < numOfEvents; i++) {
-                        eventList.add(eventSupplier(locationList));
+                        eventList.add(concertCreateOne(locationList));
                     }
-                    System.out.println("eventi creati con successo");
+                    System.out.println("Concerto creato con successo");
+                    break;
+                case 3:
+                    for (int i = 0; i < numOfEvents; i++) {
+                        eventList.add(athleticsCompetitionCreateOne(personList, locationList));
+                    }
+                    System.out.println("Gara di atletica creata con successo");
                     break;
                 default:
                     System.out.println("scelta non valida riprova!");
@@ -135,6 +111,27 @@ public class Event {
 
         return eventList;
     }
+
+    public static Concert concertCreateOne(List<Location> locationList) {
+        EventType[] eventTypeList = EventType.values();
+        Genre[] genreList = Genre.values();
+
+        LocalDate date = fk.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return new Concert(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())), genreList[r.nextInt(genreList.length)], r.nextInt(0, 2) == 1);
+    }
+
+    public static AthleticsCompetition athleticsCompetitionCreateOne(List<Person> personList, List<Location> locationList) {
+        EventType[] eventTypeList = EventType.values();
+        LocalDate date = fk.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return new AthleticsCompetition(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())), personList.get(r.nextInt(personList.size())));
+    }
+
+    public static FootballMatch footballMatchCreateOne(List<Location> locationList) {
+        EventType[] eventTypeList = EventType.values();
+        LocalDate date = fk.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return new FootballMatch(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())), fk.esports().team(), fk.esports().team(), fk.esports().team(), r.nextInt(0, 5), r.nextInt(0, 5));
+    }
+
 
     //getter e setter
 

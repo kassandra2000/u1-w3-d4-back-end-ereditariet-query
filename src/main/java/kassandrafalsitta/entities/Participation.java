@@ -9,7 +9,7 @@ import kassandrafalsitta.enums.State;
 import java.util.*;
 
 @Entity
-@Table(name = "partecipations")
+@Table(name = "Partecipations")
 public class Participation {
     static Faker fk = new Faker();
     static Random r = new Random();
