@@ -7,15 +7,15 @@ import kassandrafalsitta.dao.EventDAO;
 import kassandrafalsitta.dao.LocationDAO;
 import kassandrafalsitta.dao.PartecipationDAO;
 import kassandrafalsitta.dao.PersonDAO;
-import kassandrafalsitta.entities.Event;
-import kassandrafalsitta.entities.Location;
-import kassandrafalsitta.entities.Participation;
-import kassandrafalsitta.entities.Person;
+import kassandrafalsitta.entities.*;
+import kassandrafalsitta.enums.Gender;
 import kassandrafalsitta.enums.Genre;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Application {
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("u1w3d4");
@@ -34,9 +34,9 @@ public class Application {
         List<Location> locations = new ArrayList<>();
         List<Participation> partecipations = new ArrayList<>();
 
-//        Person person = new Person("gigo", "soretti", "gigo@gmail.com", LocalDate.parse("2000-12-11"), Gender.M);
-//        persons.add(person);
-//        prsd.save(persons);
+        Person person = new Person("gigo", "soretti", "gigo@gmail.com", LocalDate.parse("2000-12-11"), Gender.M);
+        persons.add(person);
+        prsd.save(persons);
 
 //        while (true) {
 //            try {
@@ -132,7 +132,21 @@ public class Application {
         System.out.println(ev.getPartiteVinteInCasa());
         System.out.println("------------ottenere partite vinte in trasferta--------------------");
         System.out.println(ev.getPartiteVinteInTrasferta());
-        //-----------------------------------------esercizio 3-------------------------------------------------
+        //-----------------------------------------esercizio extra-------------------------------------------------
+        System.out.println("------------ottenere partite pareggiate--------------------");
+        System.out.println(ev.getPartitePareggiate());
+        System.out.println("------------ottenere gare di atletica per vincitore--------------------");
+        System.out.println(ev.getGareDiAtleticaPerVincitore(UUID.fromString("ba815791-dcba-450a-a78c-4a5f498b9d27")));
+        List<AthleticsCompetition> at = ev.getGareDiAtleticaPerVincitore(UUID.fromString("ba815791-dcba-450a-a78c-4a5f498b9d27"));
+        at.get(0).getAthletesSet().forEach(System.out::println);
+        System.out.println("------------ottenere gare di atletica per persona partecipante--------------------");
+        System.out.println(ev.getGareDiAtleticaPerPartecipante(UUID.fromString("013f1b5f-4a68-45f1-bd06-e882c0fb8026")));
+        System.out.println("------------ottenere eventi sold out da chi ha lo stato confermato--------------------");
+        System.out.println(ev.getEventSoldOut());
+        System.out.println("------------ottenere partecipazioni non confermate dato un evento--------------------");
+        events = em.createQuery("SELECT e FROM Event e", Event.class).getResultList();
+
+        System.out.println(ev.getPartecipazioniDaConferamare(ev.findById(UUID.fromString("4e90d6c1-843e-44ae-b12e-4af667ed0664"))));
 
 
         em.close();

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import kassandrafalsitta.enums.EventType;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue("Athletics_Competition")
@@ -15,24 +15,29 @@ public class AthleticsCompetition extends Event {
             joinColumns = @JoinColumn(name = "atleti_id", nullable = false),
             inverseJoinColumns = @JoinColumn(name = "person_id", nullable = false)
     )
-    private Set<Person> athletesSet;
+    private List<Person> athletesSet;
 
     @ManyToOne
     @JoinColumn(name = "vincitore_id", nullable = false)
     private Person winner;
     //costruttori
 
-    public AthleticsCompetition(String title, LocalDate eventDate, String description, EventType eventType, int maximumNumberOfParticipants, Location locationId, Person winner) {
+    public AthleticsCompetition() {
+
+    }
+
+    public AthleticsCompetition(String title, LocalDate eventDate, String description, EventType eventType, int maximumNumberOfParticipants, Location locationId, Person winner, List<Person> athletesSet) {
         super(title, eventDate, description, eventType, maximumNumberOfParticipants, locationId);
         this.winner = winner;
+        this.athletesSet = athletesSet;
     }
 
     //getter e setter
-    public Set<Person> getAthletesSet() {
+    public List<Person> getAthletesSet() {
         return athletesSet;
     }
 
-    public void setAthletesSet(Set<Person> athletesSet) {
+    public void setAthletesSet(List<Person> athletesSet) {
         this.athletesSet = athletesSet;
     }
 

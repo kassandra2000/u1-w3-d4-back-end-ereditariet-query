@@ -126,7 +126,7 @@ public abstract class Event {
     public static AthleticsCompetition athleticsCompetitionCreateOne(List<Person> personList, List<Location> locationList) {
         EventType[] eventTypeList = EventType.values();
         LocalDate date = fk.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        return new AthleticsCompetition(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())), personList.get(r.nextInt(personList.size())));
+        return new AthleticsCompetition(fk.esports().event(), date, fk.lorem().fixedString(50), eventTypeList[r.nextInt(eventTypeList.length)], r.nextInt(1, 40), locationList.get(r.nextInt(locationList.size())), personList.get(r.nextInt(personList.size())), personList);
     }
 
     public static FootballMatch footballMatchCreateOne(List<Location> locationList) {
